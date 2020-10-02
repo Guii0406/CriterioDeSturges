@@ -46,21 +46,21 @@ namespace CriterioDeSturges
                 somaPorcentagens += CalcularPorcentagem(f);
                 string segundaCelula = f.ToString();
                 string terceiraCelula = somaFs.ToString();
-                string quartaCelula = CalcularPorcentagem(f).ToString();
-                string quintaCelula = somaPorcentagens.ToString();
+                double quartaCelula = Math.Round(CalcularPorcentagem(f), 1);
+                double quintaCelula = Math.Round(somaPorcentagens, 1);
 
                 string[] linha = new string[5] { primeiraCelula, segundaCelula, terceiraCelula, $"{quartaCelula}%", $"{quintaCelula}%" };
 
                 listView1.Items.Add(new ListViewItem(linha));
             }
-            string[] total = new string[5] { "Total", somaFs.ToString(), "", $"{somaPorcentagens}%", "" };
+            string[] total = new string[5] { "Total", somaFs.ToString(), "", $"{Math.Round(somaPorcentagens)}%", "" };
             listView1.Items.Add(new ListViewItem(total));
         }
 
         private double CalcularPorcentagem(int f)
         {
             double x = (100.0 * f) / ListaNumeros.Count;
-            x = Math.Round(x);
+            //x = Math.Round(x);
             return x;
         }
     }
