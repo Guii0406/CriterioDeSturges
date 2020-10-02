@@ -15,6 +15,7 @@ namespace CriterioDeSturges
             //ListaNumeros.AddRange(range);
             //double[] range = new double[30] { 52, 27, 46, 15, 22, 20, 68, 73, 19, 30, 33, 58, 24, 35, 32, 27, 42, 30, 45, 40, 70, 21, 27, 50, 51, 31, 17, 20, 60, 63 };
             //ListaNumeros.AddRange(range);
+            ListarNumeros();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -24,65 +25,44 @@ namespace CriterioDeSturges
         private void Adicionar()
         {
             ListaNumeros.Add((double)numericUpDown1.Value);
+            CleanAndFocusNUD();
+            ListarNumeros();
+        }
+        private void CleanAndFocusNUD()
+        {
             numericUpDown1.Value = 0;
             numericUpDown1.Focus();
+            numericUpDown1.Select(0, 3);
+        }
 
+        private void ListarNumeros()
+        {
+            richTextBox1.Clear();
+
+            foreach(double numero in ListaNumeros)
+            {
+                richTextBox1.AppendText($"{numero} - ");
+            }
             label1.Text = $"Numeros adicionados: {ListaNumeros.Count}";
         }
+
         private void button2_Click(object sender, EventArgs e)
         {
-            int quantidadeNumeros = ListaNumeros.Count;
-            double maiorNumero = ListaNumeros.Max();
-            double menorNumero = ListaNumeros.Min();
-            double k = 1 + 3.3 * Math.Log10(quantidadeNumeros);
-
-            int h = Convert.ToInt32(Math.Round((maiorNumero - menorNumero) / k));
-
-            //MessageBox.Show(h.ToString());
-
-            int novoMenornumero = Convert.ToInt32(menorNumero);
-
-            int somaFs = 0;
-            double somaPorcentagens = 0;
-
-            for (; novoMenornumero <= maiorNumero; novoMenornumero += h)
+            if(ListaNumeros.Count > 1)
             {
-                string primeiraCelula = $"{novoMenornumero} a {novoMenornumero + h}";
-                int f = 0;
-                foreach (double numero in ListaNumeros)
-                {
-                    if (numero >= novoMenornumero && numero < novoMenornumero + h)
-                    {
-                        f++;
-                    }
-                }
-                somaFs += f;
-                somaPorcentagens += CalcularPorcentagem(f);
-                string segundaCelula = f.ToString();
-                string terceiraCelula = somaFs.ToString();
-                string quartaCelula = CalcularPorcentagem(f).ToString();
-                string quintaCelula = somaPorcentagens.ToString();
-
-                string[] linha = new string[5] { primeiraCelula, segundaCelula, terceiraCelula, $"{quartaCelula}%", $"{quintaCelula}%"};
-
-                listView1.Items.Add(new ListViewItem(linha));
+            FormTabela formTabela = new FormTabela(ListaNumeros);
+            formTabela.ShowDialog();            
             }
-            string[] total = new string[5] { "Total", somaFs.ToString(), "", $"{somaPorcentagens}%", "" };
-            listView1.Items.Add(new ListViewItem(total));
-
+            else
+            {
+                MessageBox.Show("Adicione mais números para gerar a tabela!");
+                CleanAndFocusNUD();
+            }
         }
-
-        private double CalcularPorcentagem(int f)
-        {
-            double x = (100.0 * f) / ListaNumeros.Count;
-            x = Math.Round(x);
-            return x;
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
             ListaNumeros.Clear();
-            listView1.Items.Clear();
+            richTextBox1.Clear();
             label1.Text = "Numeros adicionados: 0";
         }
 
