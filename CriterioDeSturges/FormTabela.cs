@@ -13,25 +13,31 @@ namespace CriterioDeSturges
     public partial class FormTabela : Form
     {
         List<double> ListaNumeros;
+        double maiorNumero;
+        double menorNumero;
         public FormTabela(List<double> ListaNumeros)
         {
             InitializeComponent();
             this.ListaNumeros = ListaNumeros;
-            CalculareGerarTabela();
+            maiorNumero = ListaNumeros.Max();
+            menorNumero = ListaNumeros.Min();
+            GerarTabela();
         }
-
-        private void CalculareGerarTabela()
+        private int CalcularH()
         {
             int quantidadeNumeros = ListaNumeros.Count;
-            double maiorNumero = ListaNumeros.Max();
-            double menorNumero = ListaNumeros.Min();
             double k = 1 + 3.3 * Math.Log10(quantidadeNumeros);
             int h = Convert.ToInt32(Math.Round((maiorNumero - menorNumero) / k));
-            int novoMenornumero = Convert.ToInt32(menorNumero);
+            return h;
+        }
+        private void GerarTabela()
+        {
             int somaFs = 0;
             double somaPorcentagens = 0;
+            int h = CalcularH();
+            int novoMenornumero = Convert.ToInt32(menorNumero);
 
-            for (; novoMenornumero <= maiorNumero; novoMenornumero += h)
+            for (; novoMenornumero < maiorNumero; novoMenornumero += h)
             {
                 string primeiraCelula = $"{novoMenornumero} a {novoMenornumero + h}";
                 int f = 0;
@@ -60,7 +66,6 @@ namespace CriterioDeSturges
         private double CalcularPorcentagem(int f)
         {
             double x = (100.0 * f) / ListaNumeros.Count;
-            //x = Math.Round(x);
             return x;
         }
     }
